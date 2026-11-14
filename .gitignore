@@ -1,0 +1,7 @@
+# Local unseal keys, tokens, rendered secrets, and Helm metadata.
+.local/
+.env
+.env.*
+!.env.example
+*.snap
+*.log

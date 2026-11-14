@@ -1,0 +1,49 @@
+# Isolated kind lab only: plaintext HTTP and a single file-storage server.
+global:
+  tlsDisable: true
+
+injector:
+  enabled: true
+
+server:
+  dev:
+    enabled: false
+  standalone:
+    enabled: true
+    config: |
+      ui = true
+      disable_mlock = true
+
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_disable = 1
+      }
+
+      storage "file" {
+        path = "/vault/data"
+      }
+  ha:
+    enabled: false
+  dataStorage:
+    enabled: true
+    size: 1Gi
+  auditStorage:
+    enabled: true
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  serviceAccount:
+    create: true
+    name: vault
+  authDelegator:
+    enabled: true
+
+ui:
+  enabled: true
+  serviceType: ClusterIP

@@ -1,0 +1,11 @@
+# Local Kubernetes cluster for the Argo CD / GitOps learning lab.
+# kind runs each node as a container; all nodes share the host's resources.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: platform-lab
+nodes:
+  # Kubernetes control-plane node (often called the "master").
+  - role: control-plane
+  # Two workers provide room to practice scheduling workloads across nodes.
+  - role: worker
+  - role: worker
