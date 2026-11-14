@@ -1,5 +1,8 @@
 # 03 - Authenticate a Kubernetes workload
 
+For an overview of other choices and how auth differs from a secrets engine,
+see the [auth methods and secrets engines reference](auth-and-secrets-reference.md).
+
 ## 1. Enable and configure Kubernetes auth
 
 Use your administrative shell. This assumes Vault runs **inside the same

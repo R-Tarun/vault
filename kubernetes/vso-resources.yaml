@@ -1,0 +1,42 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultConnection
+metadata:
+  name: local-vault
+  namespace: vault-demo
+spec:
+  address: http://vault.vault.svc:8200
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: vso-webapp
+  namespace: vault-demo
+spec:
+  vaultConnectionRef: local-vault
+  method: kubernetes
+  mount: kubernetes
+  kubernetes:
+    role: vso-webapp
+    serviceAccount: vso-webapp
+    audiences:
+      - vault
+    tokenExpirationSeconds: 600
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: vso-webapp
+  namespace: vault-demo
+spec:
+  vaultAuthRef: vso-webapp
+  mount: kv
+  type: kv-v2
+  path: webapp/config
+  refreshAfter: 30s
+  hmacSecretData: true
+  destination:
+    create: true
+    name: vso-webapp-config
+  rolloutRestartTargets:
+    - kind: Deployment
+      name: vso-webapp

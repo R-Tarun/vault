@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vso-webapp
+  namespace: vault-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vso-webapp
+  namespace: vault-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vso-webapp
+  template:
+    metadata:
+      labels:
+        app: vso-webapp
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: webapp
+          image: nginxinc/nginx-unprivileged:1.28-alpine
+          env:
+            - name: DEMO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vso-webapp-config
+                  key: password
+          ports:
+            - name: http
+              containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5

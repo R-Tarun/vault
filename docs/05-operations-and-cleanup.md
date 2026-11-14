@@ -54,8 +54,10 @@ kubectl -n vault wait --for=condition=Ready pod/vault-0 --timeout=120s
 ```
 
 Paste the original unseal key at the prompt. Expected before unseal:
-initialized `true`, sealed `true` (status exit 2). After unseal: KV version 3
-still exists, and the audit device remains enabled. Do **not** initialize again.
+initialized `true`, sealed `true` (status exit 2). After unseal: the latest KV
+secret still exists (`demo-only-v3` after lab 04, or `demo-only-v4` after
+optional lab 04a), and the audit device remains enabled. Do **not** initialize
+again.
 
 The Agent may retry while Vault is unavailable. Already-rendered static files
 can remain readable during an outage; Vault sealing is not remote erasure of
@@ -96,6 +98,10 @@ you intend to resume. Later, restart the port-forward and set `VAULT_ADDR` and
 These commands destroy **this course's data**. They assume the two namespaces
 were created exclusively for this course. If they contain other resources,
 stop and scope cleanup to your own resources instead.
+
+If you installed VSO in optional lab 04a, first follow its
+[scoped cleanup](04a-vso-auto-restart.md#5-optional-lab-cleanup) while Vault
+and `vault-demo` still exist. Review any retained CRDs separately.
 
 First inspect the context and inventory:
 
@@ -152,5 +158,8 @@ other learning workloads may still be using it.
 - [ ] Cleanup removes only the lab; existing cluster workloads remain.
 
 Record pass/fail and observations privately, **without** tokens, keys, JWTs, or
-secret values. These are acceptance criteria for you to execute, not claims
-that these runtime tests have already passed.
+secret values. These are acceptance criteria for each learner to execute. The
+user-reported walkthrough confirmed a nonempty audit log, unseal recovery,
+retained KV version 4 and audit configuration, a nonempty audit log after restart,
+and healthy workloads. It did not inspect raw audit entries in the shared
+output or perform cleanup.

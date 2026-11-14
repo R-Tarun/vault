@@ -90,4 +90,5 @@ Explain why the application needs neither a root token nor a Kubernetes Secret,
 why admission mutation differs from runtime secret renewal, and why application
 reload behavior is separate from Agent templating.
 
-Next: [Operations, recovery, and cleanup](05-operations-and-cleanup.md).
+Next: optional [VSO automatic restart](04a-vso-auto-restart.md), or skip to
+[Operations, recovery, and cleanup](05-operations-and-cleanup.md).
